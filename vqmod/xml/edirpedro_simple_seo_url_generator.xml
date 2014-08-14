@@ -1,0 +1,125 @@
+<modification>
+	<id>Simple SEO URL Generator</id>
+	<version>1.0.0</version>
+	<vqmver>2.4.0</vqmver>
+	<author>edirpedro</author>
+	
+	<file name="system/library/url.php">
+		<operation error="skip">
+			<search position="after">
+				<![CDATA[
+				class Url {
+				]]>
+			</search>
+			<add>
+				<![CDATA[
+				public function seoURL($args) {
+					// Setting url string
+					$str = $args['string'];
+					$str = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $str));
+	            	$str = preg_replace('/[^a-zA-Z0-9]+/', '-', $str);
+					$str = trim($str, '-');
+					$str = strtolower($str);
+					
+					// Avoid duplication
+					$db = $args['db'];
+					if($db) {
+						$okay = false;
+						$counter = 1;
+						$modifier = '';
+						do {
+							if($counter > 1)
+								$modifier = '-' . $counter;
+							$result = $db->query("SELECT COUNT(*) as `total` FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $db->escape($str . $modifier) . "' AND query != '" . $args['query'] . "'");
+							if($result->row['total'] == 0) {
+								$str .= $modifier;
+								$okay = true;
+							} else
+								$counter++;
+						} while($okay == false);
+					}
+					
+	            	return $str;
+				}
+				]]>
+			</add>
+		</operation>		
+	</file>
+
+	<file name="admin/model/catalog/category.php">
+        <operation error="skip">
+			<search position="before">
+				<![CDATA[
+					if ($data['keyword']) {
+				]]>
+			</search>
+    		<add>
+				<![CDATA[
+					$data['keyword'] = $this->url->seoURL(array(
+						'string' => empty($data['keyword']) ? $data['category_description'][$language_id]['name'] : $data['keyword'],
+						'query' => 'category_id=' . (int) $category_id,
+						'db' => $this->db
+						));
+			 	]]>
+			</add>
+		</operation>
+	</file>
+	
+	<file name="admin/model/catalog/information.php">
+        <operation error="skip">
+			<search position="before">
+				<![CDATA[
+					if ($data['keyword']) {
+				]]>
+			</search>
+    		<add>
+				<![CDATA[
+					$data['keyword'] = $this->url->seoURL(array(
+						'string' => empty($data['keyword']) ? $data['information_description'][$language_id]['title'] : $data['keyword'],
+						'query' => 'information_id=' . (int) $information_id,
+						'db' => $this->db
+						));
+			 	]]>
+			</add>
+		</operation>
+	</file>
+	
+	<file name="admin/model/catalog/manufacturer.php">
+        <operation error="skip">
+			<search position="before">
+				<![CDATA[
+					if ($data['keyword']) {
+				]]>
+			</search>
+    		<add>
+				<![CDATA[
+					$data['keyword'] = $this->url->seoURL(array(
+						'string' => empty($data['keyword']) ? $data['name'] : $data['keyword'],
+						'query' => 'manufacturer_id=' . (int) $manufacturer_id,
+						'db' => $this->db
+						));
+			 	]]>
+			</add>
+		</operation>
+	</file>
+	
+	<file name="admin/model/catalog/product.php">
+		<operation error="skip">
+ 			<search position="before">
+				<![CDATA[
+					if ($data['keyword']) {
+				]]>
+			</search>
+    		<add>
+				<![CDATA[
+					$data['keyword'] = $this->url->seoURL(array(
+						'string' => empty($data['keyword']) ? $data['product_description'][$language_id]['name'] : $data['keyword'],
+						'query' => 'product_id=' . (int) $product_id,
+						'db' => $this->db
+						));
+			 	]]>
+			</add>
+		</operation>	
+	</file>
+
+</modification>
