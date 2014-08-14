@@ -37,6 +37,10 @@ A URL that has been taken
 
 Just put the `.xml` file into the vQmod `/xml` folder. That's it!
 
+## Compatibility
+
+OpenCart 1.5.3 ~ 1.5.6.4
+
 ## See also
 
 - [GitHub](https://github.com/edirpedro/opencart-simple-seo-url-generator)
