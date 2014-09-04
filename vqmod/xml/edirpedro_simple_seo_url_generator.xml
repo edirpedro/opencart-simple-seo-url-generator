@@ -1,6 +1,6 @@
 <modification>
 	<id>Simple SEO URL Generator</id>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<vqmver>2.4.0</vqmver>
 	<author>edirpedro</author>
 	
@@ -31,7 +31,7 @@
 						do {
 							if($counter > 1)
 								$modifier = '-' . $counter;
-							$result = $db->query("SELECT COUNT(*) as `total` FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $db->escape($str . $modifier) . "' AND query != '" . $args['query'] . "'");
+							$result = $db->query("SELECT COUNT(*) as `total` FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $db->escape($str . $modifier) . "'");
 							if($result->row['total'] == 0) {
 								$str .= $modifier;
 								$okay = true;
