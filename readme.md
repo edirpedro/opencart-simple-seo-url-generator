@@ -28,6 +28,10 @@ A URL that has been taken
 	Title: Duplicated Title
 	URL: duplicated-title-2
 
+## Force Updates
+
+You can force keyword updates to make sure your client is using the proper URL, but doing that you won't be able to customize keywords. Open the `.xml` file from this extension and find the variable `$force_keyword`, then set it to `true` to force keyword updates on every change or `false` to update only when the field keyword is empty.
+
 ## Requirements
 
 1. This module uses vQmod to work.
